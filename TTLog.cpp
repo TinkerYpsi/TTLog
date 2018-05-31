@@ -6,93 +6,80 @@
 #include <Time.h>
 #include <TimeLib.h>
 
-int TTLog::g_iCS_pin = DEFAULT_CS_PIN;
-TTLog* TTLog::m_pInstance = NULL;
+TTLog::TTLog() {}
 
-TTLog* TTLog::log()
+void TTLog::begin(uint8_t sd_cs_pin)
 {
-  if(!m_pInstance)    // only allows one instance of class to be generated
+  Serial.print("Initializing SD card...");
+
+  // see if the card is present and can be initialized:
+  if (!SD.begin(sd_cs_pin))
   {
-    m_pInstance = new TTLog;
+    Serial.println("SD Card failed, or not present");
+    // don't do anything more:
   }
-  initializeSD();
-  return m_pInstance;
+  else
+  {
+    Serial.println("card initialized.");
+  }
 }
 
+/*
+  @Description
+    Creates a log entry that is optionally written to the serial monitor or to
+    the SD card
 
-void TTLog::entry(const char *rgMessage, String &sFilename,
-                  bool bPrintSerial, bool bPrintSDCard)
+  @param message - (const char*) to be written into the log entry
+  @param filename - (String) The file name on the SD card to which to append the entry
+  @param printSerial - (Bool) Whether the entry should be written to the serial monitor
+  @param printSDCard - (Bool) Whether the entry should be written to the SD card
+*/
+void TTLog::entry(const char *message, String &filename,
+                  bool print_serial, bool print_sd_card)
 {
-  String sMessage = String(rgMessage);
-  sMessage += "\n";
-  TTLog::printDateTime(sMessage);
+  String message_str = String(message);
+  message_str += "\n";
 
-  if(bPrintSDCard)
+  TTLog::appendDateTime(message_str);
+
+  if(print_sd_card)
   {
     // open the file. note that only one file can be open at a time,
     // so you have to close this one before opening another.
-    File dataFile = SD.open(sFilename, FILE_WRITE);
+    File DataFile = SD.open(filename, FILE_WRITE);
 
     // if the file is available, write to it if...
-    if (dataFile)
+    if (DataFile)
     {
       // an intruder has entered or left...
-      if(sMessage != NO_DATA && sMessage != "")
+      if(message_str != NO_DATA && message_str != "")
       {
-        dataFile.println(sMessage);
+        DataFile.println(message_str);
       }
       // otherwise just close the file
-      dataFile.close();
+      DataFile.close();
     }
 
     // if the file isn't open, pop up an error:
     else
     {
-      Serial.println("error opening " + String(sFilename));
+      Serial.println("error opening " + String(filename));
     }
   }
-  if(bPrintSerial)
+  if(print_serial)
   {
-    Serial.println(sMessage);
+    Serial.println(message_str);
   }
 }
 
-
-void TTLog::setChipSelect(int iCS_pin)
-{
-  g_iCS_pin = iCS_pin;
-}
-
-
-void TTLog::initializeSD()
-{
-  Serial.print("Initializing SD card...");
-
-  // see if the card is present and can be initialized:
-  if (!SD.begin(g_iCS_pin))
-  {
-    Serial.println("SD Card failed, or not present");
-    // don't do anything more:
-    return;
-  }
-  Serial.println("card initialized.");
-}
-
-
-TTLog::TTLog()
-{
-  g_iCS_pin = DEFAULT_CS_PIN;
-}
-
-
-void TTLog::setDateTime(int iHour, int iMinute,
-                        int iDay, int iMonth, int iYear)
+void TTLog::setDateTime(int hour, int minute,
+                        int day, int month, int year)
 {
   // user entered time as params
-  if(iHour != -1 && iMinute != -1 && iDay != -1 && iMonth != -1 && iYear != -1)
+  if(hour != -1 && minute != -1 && day != -1 && month != -1 && year != -1)
   {
-    int iSecond = 0;
-    setTime(iHour, iMinute, iSecond, iDay, iMonth, iYear);
+    int second = 0;
+    setTime(hour, minute, second, day, month, year);
     return;
   }
 
@@ -107,86 +94,86 @@ void TTLog::setDateTime(int iHour, int iMinute,
     return;
   }
 
-  char rg_Input[5];
+  char input_buffer[5];
   Serial.println("Please set the time");
   Serial.println();
 
-  memset(rg_Input, '\0', sizeof(rg_Input));
+  memset(input_buffer, '\0', sizeof(input_buffer));
   Serial.print("Hour: ");
   while(!Serial.available());
   int i = 0;
   while(Serial.available())
   {
     delay(10);
-    rg_Input[i] = Serial.read();
+    input_buffer[i] = Serial.read();
     i++;
     if(i > 1)
     {
       break;
     }
   }
-  iHour = atoi(rg_Input);
-  Serial.println(iHour);
+  hour = atoi(input_buffer);
+  Serial.println(hour);
 
-  memset(rg_Input, '\0', sizeof(rg_Input));
+  memset(input_buffer, '\0', sizeof(input_buffer));
   Serial.print("Minute: ");
   while(!Serial.available());
   i = 0;
   while(Serial.available())
   {
     delay(10);
-    rg_Input[i] = Serial.read();
+    input_buffer[i] = Serial.read();
     i++;
     if(i > 1)
     {
       break;
     }
   }
-  iMinute = atoi(rg_Input);
-  Serial.println(iMinute);
+  minute = atoi(input_buffer);
+  Serial.println(minute);
 
-  memset(rg_Input, '\0', sizeof(rg_Input));
+  memset(input_buffer, '\0', sizeof(input_buffer));
   Serial.print("Month: ");
   while(!Serial.available());
   i = 0;
   while(Serial.available())
   {
     delay(10);
-    rg_Input[i] = Serial.read();
+    input_buffer[i] = Serial.read();
     i++;
     if(i > 1)
     {
       break;
     }
   }
-  iMonth = atoi(rg_Input);
-  Serial.println(iMonth);
+  month = atoi(input_buffer);
+  Serial.println(month);
 
-  memset(rg_Input, '\0', sizeof(rg_Input));
+  memset(input_buffer, '\0', sizeof(input_buffer));
   Serial.print("Day: ");
   while(!Serial.available());
   i = 0;
   while(Serial.available())
   {
     delay(10);
-    rg_Input[i] = Serial.read();
+    input_buffer[i] = Serial.read();
     i++;
     if(i > 1)
     {
       break;
     }
   }
-  iDay = atoi(rg_Input);
-  Serial.println(iDay);
+  day = atoi(input_buffer);
+  Serial.println(day);
 
-  memset(rg_Input, '\0', sizeof(rg_Input));
+  memset(input_buffer, '\0', sizeof(input_buffer));
   Serial.print("Year: ");
   while(!Serial.available());
   i = 0;
   while(Serial.available())
   {
     delay(10);
-    rg_Input[i] = Serial.read();
+    input_buffer[i] = Serial.read();
     i++;
     if(i > 3)
     {
@@ -194,56 +181,56 @@ void TTLog::setDateTime(int iHour, int iMinute,
     }
   }
 
-  iYear = atoi(rg_Input);
-  Serial.println(iYear);
-  int iSecond = 0;
+  year = atoi(input_buffer);
+  Serial.println(year);
+  int second = 0;
 
-  setTime(iHour, iMinute, iSecond, iDay, iMonth, iYear);
+  setTime(hour, minute, second, day, month, year);
 
   String sNow;
-  printDateTime(sNow);
+  appendDateTime(sNow);
   Serial.println("It is now: ");
   Serial.println(sNow);
 }
 
 
-void TTLog::printDateTime(String &sDateTime)
+void TTLog::appendDateTime(String &sDateTime)
 {
-  printTime(sDateTime);
-  printDate(sDateTime);
+  appendTime(sDateTime);
+  appendDate(sDateTime);
 }
 
-void TTLog::printTime(String &sTime)
+void TTLog::appendTime(String &time_str)
 {
-  String sHour; String sMinute;
+  String hour_str; String minute_str;
   time_t t = now();
 
   if(hour(t) < 10)
   {
-    sHour = "0" + String(hour(t));
+    hour_str = "0" + String(hour(t));
   }
   else
   {
-    sHour = String(hour(t));
+    hour_str = String(hour(t));
   }
 
   if(minute(t) < 10)
   {
-    sMinute = "0" + String(minute(t));
+    minute_str = "0" + String(minute(t));
   }
   else
   {
-    sMinute = String(minute(t));
+    minute_str = String(minute(t));
   }
 
-  sTime += sHour + ":" + sMinute + "\n";
+  time_str += hour_str + ":" + minute_str + "\n";
 }
 
-void TTLog::printDate(String &sDate)
+void TTLog::appendDate(String &date_str)
 {
   time_t t = now();
-  String sMonth = String(monthShortStr(month()));
-  sDate += sMonth + " ";
-  sDate += String(day(t)) + " ";
-  sDate += String(year(t)) + "\n";
+  String month_str = String(monthShortStr(month()));
+  date_str += month_str + " ";
+  date_str += String(day(t)) + " ";
+  date_str += String(year(t)) + "\n";
 }
