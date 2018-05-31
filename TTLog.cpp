@@ -1,9 +1,16 @@
 #include "Arduino.h"
 #include "TTLog.h"
 
-void entry(String &sMessage, String &sFilename,
-           bool &bPrintSerial, bool &bPrintSDCard)
+static TTLog& TTLog::getLog()
 {
+  // static TTLog s_log;
+  return s_log;
+}
+
+void entry(const char *rgMessage, String &sFilename,
+           bool bPrintSerial, bool bPrintSDCard)
+{
+  String sMessage = String(rgMessage);
   sMessage += "\n";
   TTLog::printDateTime(sMessage);
 
@@ -37,8 +44,8 @@ void entry(String &sMessage, String &sFilename,
   }
 }
 
-void TTLog::setDateTime(int &iHour, int &iMinute,
-                        int &iDay, int &iMonth, int &iYear)
+void TTLog::setDateTime(int iHour, int iMinute,
+                        int iDay, int iMonth, int iYear)
 {
   // user entered time as params
   if(iHour != -1 && iMinute != -1 && iDay != -1 && iMonth != -1 && iYear != -1)
@@ -165,7 +172,7 @@ void TTLog::printDateTime(String &sDateTime)
   TTLog::printDate(sDateTime);
 }
 
-void TTLog::printTime(string &sTime)
+void TTLog::printTime(String &sTime)
 {
   String sHour; String sMinute;
   time_t t = Time::now();
@@ -191,7 +198,7 @@ void TTLog::printTime(string &sTime)
   sTime += sHour + ":" + sMinute + "\n";
 }
 
-void TTLog::printDate(string &sDate)
+void TTLog::printDate(String &sDate)
 {
   time_t t = Time::now();
   String sMonth = String(Time::monthShortStr(Time::month()));

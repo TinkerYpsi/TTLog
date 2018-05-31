@@ -20,32 +20,31 @@
 class TTLog
 {
   public:
-    static TTLog& create()
-    {
-      static TTLog s_object;
-      return s_object;
-    }
+    static TTLog& getLog();
 
     /* by default, user sets time using Serial.read()
        but user can also enter time manually as params */
-    void setDateTime(int &iHour = -1, int &iMinute = -1, int &iDay = -1,
-                     int &iMonth = -1, int &iYear = -1);
+    void setDateTime(int iHour = -1, int iMinute = -1, int iDay = -1,
+                     int iMonth = -1, int iYear = -1);
 
     /* prints message to sFilename on SD card and serial by default */
-    void entry(String &sMessage, String &sFilename,
-               bool &bPrintSerial = true, bool &bPrintSDCard = true);
+    void entry(const char *rgMessage, String &sFilename,
+               bool bPrintSerial = true, bool bPrintSDCard = true);
 
     /* concatenates string with current time and/or date */
     void printDateTime(String &sDateTime);
-    void printTime(string &sTime);
-    void printDate(string &sDate);
+    void printTime(String &sTime);
+    void printDate(String &sDate);
+
+    // TODO: INITIALIZE SD CARD
 
   private:
+    static TTLog s_log;
     TTLog() {}
     int m_cs_pin;
 
   public:
-    TTLog(TTlog const&)           = delete;   // prevents copying a singleton
+    TTLog(TTLog const&)           = delete;   // prevents copying a singleton
     void operator=(TTLog const&)  = delete;   // prevents copying a singleton
 };
 
