@@ -41,6 +41,7 @@ class TTLog
     static void setChipSelect(int iCS_pin);
 
   private:
+    static bool bInitSD;
     static int g_iCS_pin;
     TTLog();                      // prevents copying a singleton
     TTLog(TTLog const&){};             // prevents copying a singleton

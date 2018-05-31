@@ -7,23 +7,12 @@
 #include <TimeLib.h>
 
 int TTLog::g_iCS_pin = DEFAULT_CS_PIN;
-TTLog* TTLog::m_pInstance = NULL;
 bool TTLog::bInitSD = false;
 
-TTLog* TTLog::log()
+TTLog::TTlog()
 {
-  if(!m_pInstance)    // only allows one instance of class to be generated
-  {
-    m_pInstance = new TTLog;
-  }
-  if(!bInitSD)
-  {
     initializeSD();
-    bInitSD = true;
-  }
-  return m_pInstance;
 }
-
 
 void TTLog::entry(const char *rgMessage, String &sFilename,
                   bool bPrintSerial, bool bPrintSDCard)
@@ -65,7 +54,7 @@ void TTLog::entry(const char *rgMessage, String &sFilename,
 
 void TTLog::setChipSelect(int iCS_pin)
 {
-  g_iCS_pin = iCS_pin;
+  m_iCS_pin = iCS_pin;
   bInitSD = false;
 }
 
