@@ -35,8 +35,7 @@ class TTLog
     void printDateTime(String &sDateTime);
     void printTime(String &sTime);
     void printDate(String &sDate);
-
-    // TODO: INITIALIZE SD CARD
+    void initializeSD(int iCS_pin = 10);
 
   private:
     int m_cs_pin;

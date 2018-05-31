@@ -17,7 +17,7 @@ void entry(const char *rgMessage, String &sFilename,
 {
   String sMessage = String(rgMessage);
   sMessage += "\n";
-  TTLog::printDateTime(sMessage);
+  //printDateTime(sMessage);
 
   // open the file. note that only one file can be open at a time,
   // so you have to close this one before opening another.
@@ -49,6 +49,27 @@ void entry(const char *rgMessage, String &sFilename,
   }
 }
 
+
+void TTLog::initializeSD(int iCS_pin)
+{
+  m_iCS_pin = iCS_pin;
+  while (!Serial);
+  Serial.print("Initializing SD card...");
+
+  // see if the card is present and can be initialized:
+  if (!SD.begin(m_iCS_pin))
+  {
+    Serial.println("Card failed, or not present");
+    // don't do anything more:
+    return;
+  }
+  Serial.println("card initialized.");
+}
+
+
+TTLog::TTLog() : m_cs_pin(DEFAULT_CS_PIN) {}
+
+
 void TTLog::setDateTime(int iHour, int iMinute,
                         int iDay, int iMonth, int iYear)
 {
@@ -56,7 +77,7 @@ void TTLog::setDateTime(int iHour, int iMinute,
   if(iHour != -1 && iMinute != -1 && iDay != -1 && iMonth != -1 && iYear != -1)
   {
     int iSecond = 0;
-    Time::setTime(iHour, iMinute, iSecond, iMonth, iYear);
+    setTime(iHour, iMinute, iSecond, iDay, iMonth, iYear);
     return;
   }
 
@@ -158,14 +179,14 @@ void TTLog::setDateTime(int iHour, int iMinute,
     }
   }
 
-  int iYear = atoi(rg_Input);
+  iYear = atoi(rg_Input);
   Serial.println(iYear);
   int iSecond = 0;
 
-  Time::setTime(iHour, iMinute, iSecond, iDay, iMonth, iYear);
+  setTime(iHour, iMinute, iSecond, iDay, iMonth, iYear);
 
   String sNow;
-  TTLog::printTimeAndDate(sNow);
+  printDateTime(sNow);
   Serial.println("It is now: ");
   Serial.println(sNow);
 }
@@ -173,31 +194,31 @@ void TTLog::setDateTime(int iHour, int iMinute,
 
 void TTLog::printDateTime(String &sDateTime)
 {
-  TTLog::printTime(sDateTime);
-  TTLog::printDate(sDateTime);
+  printTime(sDateTime);
+  printDate(sDateTime);
 }
 
 void TTLog::printTime(String &sTime)
 {
   String sHour; String sMinute;
-  time_t t = Time::now();
+  time_t t = now();
 
   if(hour(t) < 10)
   {
-    sHour = "0" + String(Time::hour(t));
+    sHour = "0" + String(hour(t));
   }
   else
   {
-    sHour = String(Time::hour(t));
+    sHour = String(hour(t));
   }
 
-  if(Time::minute(t) < 10)
+  if(minute(t) < 10)
   {
-    sMinute = "0" + String(Time::minute(t));
+    sMinute = "0" + String(minute(t));
   }
   else
   {
-    sMinute = String(Time::minute(t));
+    sMinute = String(minute(t));
   }
 
   sTime += sHour + ":" + sMinute + "\n";
@@ -205,9 +226,9 @@ void TTLog::printTime(String &sTime)
 
 void TTLog::printDate(String &sDate)
 {
-  time_t t = Time::now();
-  String sMonth = String(Time::monthShortStr(Time::month()));
+  time_t t = now();
+  String sMonth = String(monthShortStr(month()));
   sDate += sMonth + " ";
-  sDate += String(Time::day(t)) + " ";
-  sDate += String(Time::year(t)) + "\n";
+  sDate += String(day(t)) + " ";
+  sDate += String(year(t)) + "\n";
 }
