@@ -15,57 +15,63 @@ TTLog* TTLog::log()
   {
     m_pInstance = new TTLog;
   }
+  initializeSD();
   return m_pInstance;
 }
 
 
 void TTLog::entry(const char *rgMessage, String &sFilename,
-           bool bPrintSerial, bool bPrintSDCard)
+                  bool bPrintSerial, bool bPrintSDCard)
 {
   String sMessage = String(rgMessage);
   sMessage += "\n";
   TTLog::printDateTime(sMessage);
 
-  // open the file. note that only one file can be open at a time,
-  // so you have to close this one before opening another.
-  File dataFile = SD.open(sFilename, FILE_WRITE);
-
-  // if the file is available, write to it if...
-  if (dataFile)
+  if(bPrintSDCard)
   {
-    // an intruder has entered or left...
-    if(sMessage != NO_DATA && sMessage != "")
+    // open the file. note that only one file can be open at a time,
+    // so you have to close this one before opening another.
+    File dataFile = SD.open(sFilename, FILE_WRITE);
+
+    // if the file is available, write to it if...
+    if (dataFile)
     {
-      if(bPrintSDCard)
+      // an intruder has entered or left...
+      if(sMessage != NO_DATA && sMessage != "")
       {
         dataFile.println(sMessage);
       }
-      if(bPrintSerial)
-      {
-        Serial.println(sMessage);
-      }
+      // otherwise just close the file
+      dataFile.close();
     }
-    // otherwise just close the file
-    dataFile.close();
-  }
 
-  // if the file isn't open, pop up an error:
-  else
+    // if the file isn't open, pop up an error:
+    else
+    {
+      Serial.println("error opening " + String(sFilename));
+    }
+  }
+  if(bPrintSerial)
   {
-    Serial.println("error opening" + String(sFilename));
+    Serial.println(sMessage);
   }
 }
 
 
-void TTLog::initializeCustomSD(int iCS_pin)
+void TTLog::setChipSelect(int iCS_pin)
 {
   g_iCS_pin = iCS_pin;
+}
+
+
+void TTLog::initializeSD()
+{
   Serial.print("Initializing SD card...");
 
   // see if the card is present and can be initialized:
   if (!SD.begin(g_iCS_pin))
   {
-    Serial.println("Card failed, or not present");
+    Serial.println("SD Card failed, or not present");
     // don't do anything more:
     return;
   }
@@ -94,7 +100,7 @@ void TTLog::setDateTime(int iHour, int iMinute,
   // wait for Serial port to connect
   if(!Serial)
   {
-    delay(1000);
+    delay(300);
   }
   if(!Serial)
   {

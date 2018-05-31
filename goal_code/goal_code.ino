@@ -13,7 +13,7 @@ void setup()
 void loop()
 {
   // filename destination for logged data
-  String g_sFileName = "datalog.txt";
+  String g_sFileName = "data.txt";
 
   // if motion is detected and previously undetected
   if((digitalRead(g_iMotionPin) == HIGH && g_iMotionState == LOW))

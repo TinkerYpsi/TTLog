@@ -6,6 +6,11 @@
 
 #include <Arduino.h>
 
+#include <SPI.h>
+#include <SD.h>
+#include <Time.h>
+#include <TimeLib.h>
+
 
 /*
 * SD card attached to SPI bus as follows:
@@ -32,7 +37,8 @@ class TTLog
     static void printDateTime(String &sDateTime);
     static void printTime(String &sTime);
     static void printDate(String &sDate);
-    static void initializeCustomSD(int iCS_pin);
+    static void initializeSD();
+    static void setChipSelect(int iCS_pin);
 
   private:
     static int g_iCS_pin;
