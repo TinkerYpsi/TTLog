@@ -1,10 +1,15 @@
 #include "Arduino.h"
 #include "TTLog.h"
 
-static TTLog& TTLog::getLog()
+TTLog* TTLog::m_pInstance = NULL;
+
+TTLog* TTLog::log()
 {
-  // static TTLog s_log;
-  return s_log;
+  if(!m_pInstance)    // only allows one instance of class to be generated
+  {
+    m_pInstance = new TTLog;
+  }
+  return m_pInstance;
 }
 
 void entry(const char *rgMessage, String &sFilename,
@@ -70,7 +75,7 @@ void TTLog::setDateTime(int iHour, int iMinute,
   Serial.println("Please set the time");
   Serial.println();
 
-  std::memset(rg_Input, '\0', sizeof(rg_Input));
+  memset(rg_Input, '\0', sizeof(rg_Input));
   Serial.print("Hour: ");
   while(!Serial.available());
   int i = 0;
@@ -84,10 +89,10 @@ void TTLog::setDateTime(int iHour, int iMinute,
       break;
     }
   }
-  iHour = std::atoi(rg_Input);
+  iHour = atoi(rg_Input);
   Serial.println(iHour);
 
-  std::memset(rg_Input, '\0', sizeof(rg_Input));
+  memset(rg_Input, '\0', sizeof(rg_Input));
   Serial.print("Minute: ");
   while(!Serial.available());
   i = 0;
@@ -101,10 +106,10 @@ void TTLog::setDateTime(int iHour, int iMinute,
       break;
     }
   }
-  iMinute = std::atoi(rg_Input);
+  iMinute = atoi(rg_Input);
   Serial.println(iMinute);
 
-  std::memset(rg_Input, '\0', sizeof(rg_Input));
+  memset(rg_Input, '\0', sizeof(rg_Input));
   Serial.print("Month: ");
   while(!Serial.available());
   i = 0;
@@ -118,10 +123,10 @@ void TTLog::setDateTime(int iHour, int iMinute,
       break;
     }
   }
-  iMonth = std::atoi(rg_Input);
+  iMonth = atoi(rg_Input);
   Serial.println(iMonth);
 
-  std::memset(rg_Input, '\0', sizeof(rg_Input));
+  memset(rg_Input, '\0', sizeof(rg_Input));
   Serial.print("Day: ");
   while(!Serial.available());
   i = 0;
@@ -135,10 +140,10 @@ void TTLog::setDateTime(int iHour, int iMinute,
       break;
     }
   }
-  iDay = std::atoi(rg_Input);
+  iDay = atoi(rg_Input);
   Serial.println(iDay);
 
-  std::memset(rg_Input, '\0', sizeof(rg_Input));
+  memset(rg_Input, '\0', sizeof(rg_Input));
   Serial.print("Year: ");
   while(!Serial.available());
   i = 0;
@@ -153,7 +158,7 @@ void TTLog::setDateTime(int iHour, int iMinute,
     }
   }
 
-  int iYear = std::atoi(rg_Input);
+  int iYear = atoi(rg_Input);
   Serial.println(iYear);
   int iSecond = 0;
 

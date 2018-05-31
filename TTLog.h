@@ -20,7 +20,7 @@
 class TTLog
 {
   public:
-    static TTLog& getLog();
+    static TTLog* log();
 
     /* by default, user sets time using Serial.read()
        but user can also enter time manually as params */
@@ -39,13 +39,11 @@ class TTLog
     // TODO: INITIALIZE SD CARD
 
   private:
-    static TTLog s_log;
-    TTLog() {}
     int m_cs_pin;
-
-  public:
-    TTLog(TTLog const&)           = delete;   // prevents copying a singleton
-    void operator=(TTLog const&)  = delete;   // prevents copying a singleton
+    TTLog(){};                      // prevents copying a singleton
+    TTLog(TTLog const&){};             // prevents copying a singleton
+    void operator=(TTLog const&){};    // prevents copying a singleton
+    static TTLog* m_pInstance;      // ensures only one instance is created
 };
 
 #endif
