@@ -1,6 +1,12 @@
-#include "Arduino.h"
+#include <Arduino.h>
 #include "TTLog.h"
 
+#include <SPI.h>
+#include <SD.h>
+#include <Time.h>
+#include <TimeLib.h>
+
+int TTLog::g_iCS_pin = DEFAULT_CS_PIN;
 TTLog* TTLog::m_pInstance = NULL;
 
 TTLog* TTLog::log()
@@ -12,12 +18,13 @@ TTLog* TTLog::log()
   return m_pInstance;
 }
 
-void entry(const char *rgMessage, String &sFilename,
+
+void TTLog::entry(const char *rgMessage, String &sFilename,
            bool bPrintSerial, bool bPrintSDCard)
 {
   String sMessage = String(rgMessage);
   sMessage += "\n";
-  //printDateTime(sMessage);
+  TTLog::printDateTime(sMessage);
 
   // open the file. note that only one file can be open at a time,
   // so you have to close this one before opening another.
@@ -50,14 +57,13 @@ void entry(const char *rgMessage, String &sFilename,
 }
 
 
-void TTLog::initializeSD(int iCS_pin)
+void TTLog::initializeCustomSD(int iCS_pin)
 {
-  m_iCS_pin = iCS_pin;
-  while (!Serial);
+  g_iCS_pin = iCS_pin;
   Serial.print("Initializing SD card...");
 
   // see if the card is present and can be initialized:
-  if (!SD.begin(m_iCS_pin))
+  if (!SD.begin(g_iCS_pin))
   {
     Serial.println("Card failed, or not present");
     // don't do anything more:
@@ -67,7 +73,10 @@ void TTLog::initializeSD(int iCS_pin)
 }
 
 
-TTLog::TTLog() : m_cs_pin(DEFAULT_CS_PIN) {}
+TTLog::TTLog()
+{
+  g_iCS_pin = DEFAULT_CS_PIN;
+}
 
 
 void TTLog::setDateTime(int iHour, int iMinute,
