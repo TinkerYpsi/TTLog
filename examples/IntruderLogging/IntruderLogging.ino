@@ -8,8 +8,8 @@ void setup()
   Serial.begin(9600);
   while(!Serial);
   Log.begin();
-  Log.setDateTime();
-  pinMode(g_iMotionPin, INPUT);
+  Log.setDateTimeTXT();
+  pinMode(motionPin, INPUT);
 }
 
 void loop()
@@ -21,14 +21,14 @@ void loop()
   if((digitalRead(motionPin) == HIGH && motionState == LOW))
   {
     motionState = HIGH;
-    Log.entry("Intruder detected by motion!", fileName);
+    Log.entryTXT("Intruder detected by motion!", fileName);
   }
 
   // if motion went away after previously detected
-  else if((digitalRead(motionPin) == LOW && motionState == HIGH))
+  else if((digitalReadTXT(motionPin) == LOW && motionState == HIGH))
   {
     motionState = LOW;
-    Log.entry("No more motion!", fileName);
+    Log.entryTXT("No more motion!", fileName);
   }
 
   else;   // nothing about the system has changed
