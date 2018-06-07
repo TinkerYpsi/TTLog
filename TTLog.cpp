@@ -234,3 +234,44 @@ void TTLog::appendDate(String &date_str)
   date_str += String(day(t)) + " ";
   date_str += String(year(t)) + "\n";
 }
+
+void TTLog::appendDateTimeCSV(String &sDateTime)
+{
+  appendTimeCSV(sDateTime);
+  appendDateCSV(sDateTime);
+}
+
+void TTLog::appendDateCSV(String &date_str)
+{
+  time_t t = now();
+  String month_str = String(monthShortStr(month()));
+  date_str += month_str + ",";
+  date_str += String(day(t)) + ",";
+  date_str += String(year(t)) + "\n";
+}
+
+void TTLog::appendTimeCSV(String &time_str)
+{
+  String hour_str; String minute_str;
+  time_t t = now();
+
+  if(hour(t) < 10)
+  {
+    hour_str = "0" + String(hour(t));
+  }
+  else
+  {
+    hour_str = String(hour(t));
+  }
+
+  if(minute(t) < 10)
+  {
+    minute_str = "0" + String(minute(t));
+  }
+  else
+  {
+    minute_str = String(minute(t));
+  }
+
+  time_str += hour_str + ":" + minute_str + ",";
+}

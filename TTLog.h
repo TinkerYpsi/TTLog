@@ -44,6 +44,10 @@ class TTLog
     void appendDateTime(String &date_time);
     void appendTime(String &time);
     void appendDate(String &date);
+    /* concatenates string using commas */
+    void appendDateTimeCSV(String &date_time);
+    void appendTimeCSV(String &time);
+    void appendDateCSV(String &date);
     void begin(uint8_t sd_cs_pin = DEFAULT_CS_PIN);
 
   private:
