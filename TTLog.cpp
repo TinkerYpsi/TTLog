@@ -83,7 +83,7 @@ void TTLog::entryCSV(const char *message, String &filename,
   @param printSerial - (Bool) Whether the entry should be written to the serial monitor
   @param printSDCard - (Bool) Whether the entry should be written to the SD card
 */
-void TTLog::entry(const char *message, String &filename,
+void TTLog::entryTXT(const char *message, String &filename,
                   bool print_serial, bool print_sd_card)
 {
   String message_str = String(message);
@@ -121,7 +121,7 @@ void TTLog::entry(const char *message, String &filename,
   }
 }
 
-void TTLog::setDateTime(int hour, int minute,
+void TTLog::setDateTimeTXT(int hour, int minute,
                         int day, int month, int year)
 {
   // user entered time as params
@@ -243,13 +243,13 @@ void TTLog::setDateTime(int hour, int minute,
 }
 
 
-void TTLog::appendDateTime(String &sDateTime)
+void TTLog::appendDateTimeTXT(String &sDateTime)
 {
   appendTime(sDateTime);
   appendDate(sDateTime);
 }
 
-void TTLog::appendTime(String &time_str)
+void TTLog::appendTimeTXT(String &time_str)
 {
   String hour_str; String minute_str;
   time_t t = now();
@@ -275,7 +275,7 @@ void TTLog::appendTime(String &time_str)
   time_str += hour_str + ":" + minute_str + "\n";
 }
 
-void TTLog::appendDate(String &date_str)
+void TTLog::appendDateTXT(String &date_str)
 {
   time_t t = now();
   String month_str = String(monthShortStr(month()));

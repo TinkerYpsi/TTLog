@@ -33,25 +33,28 @@ class TTLog
 
     /* by default, user sets time using Serial.read()
        but user can also enter time manually as params */
-    void setDateTime(int hour = -1, int minute = -1, int day = -1,
+    void setDateTimeTXT(int hour = -1, int minute = -1, int day = -1,
                             int month = -1, int year = -1);
 
-    /* prints message to filename.txt on SD card and serial by default */
-    void entry(const char *message, String &filename,
+    /*
+     * prints message to filename on SD card and serial by default
+     * formatted for .txt files
+     */
+    void entryTXT(const char *message, String &filename,
                       bool print_serial = true, bool print_sd_card = true);
 
     /*
      * prints message to filename on SD card and serial by default
-     * formatted for csv files
+     * formatted for .csv files
      */
     void entryCSV(const char *message, String &filename,
                       bool print_serial = true, bool print_sd_card = true);
 
-    /* concatenates string with current time and/or date */
-    void appendDateTime(String &date_time);
-    void appendTime(String &time);
-    void appendDate(String &date);
-    /* concatenates string using commas */
+    /* concatenates string with current time and/or date for .txt files */
+    void appendDateTimeTXT(String &date_time);
+    void appendTimeTXT(String &time);
+    void appendDateTXT(String &date);
+    /* concatenates string using commas for .csv files */
     void appendDateTimeCSV(String &date_time);
     void appendTimeCSV(String &time);
     void appendDateCSV(String &date);
