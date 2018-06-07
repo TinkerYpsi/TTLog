@@ -36,8 +36,15 @@ class TTLog
     void setDateTime(int hour = -1, int minute = -1, int day = -1,
                             int month = -1, int year = -1);
 
-    /* prints message to sFilename on SD card and serial by default */
+    /* prints message to filename.txt on SD card and serial by default */
     void entry(const char *message, String &filename,
+                      bool print_serial = true, bool print_sd_card = true);
+
+    /*
+     * prints message to filename on SD card and serial by default
+     * formatted for csv files
+     */
+    void entryCSV(const char *message, String &filename,
                       bool print_serial = true, bool print_sd_card = true);
 
     /* concatenates string with current time and/or date */
