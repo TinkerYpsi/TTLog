@@ -7,6 +7,9 @@ int lux = 0;
 int moisture = 0;
 String message;
 
+// filename destination for logged data
+String filename = "data.csv";
+
 AM2302 humidityDetector(humiditySensorPin);
 
 void setup()
@@ -15,13 +18,12 @@ void setup()
   while(!Serial);
   Log.begin();
   Log.setDateTimeCSV();
+  String header = "Humidity,Temperature,Light,Moisture";
+  Log.entryHeaderCSV(header, filename);
 }
 
 void loop()
 {
-  // filename destination for logged data
-  String fileName = "data.csv";
-
   humidityDetector.readHumidity();
   humidityDetector.readTemperature();
 
@@ -63,5 +65,5 @@ void loop()
     message += "Dry,"
   }
 
-  Log.entryCSV(message, fileName);
+  Log.entryCSV(message, filename);
 }
