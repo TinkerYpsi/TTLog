@@ -2,11 +2,12 @@
 
 const int soilMoisturePin = A1;
 const int luxDetectorPin = A2;
+const int humiditySensorPin = 3;
 int lux = 0;
 int moisture = 0;
+String message;
 
-const int
-int motionState = LOW;
+AM2302 humidityDetector(humiditySensorPin);
 
 void setup()
 {
@@ -14,16 +15,27 @@ void setup()
   while(!Serial);
   Log.begin();
   Log.setDateTimeCSV();
-  pinMode(motionPin, INPUT);
 }
 
 void loop()
 {
   // filename destination for logged data
   String fileName = "data.csv";
+
+  humidityDetector.readHumidity();
+  humidityDetector.readTemperature();
+
+  if(isnan(humidityDetector.humidity) || isnan(humidityDetector.temperature_C))
+  {
+    Serial.println("Humidity sensor read failure!");
+    return;
+  }
+
+  message += humidityDetector.humidity + ",";
+  message += humidityDetector.temperature_F + ",";
+
   lux = analogRead(luxDetectorPin);
   moisture = analogRead(soilMoisturePin);
-  String message;
 
   if(lux > 700)
   {
@@ -42,7 +54,7 @@ void loop()
   {
     message += "Damp,"
   }
-  else if(mositure > 400)
+  else if(moisture > 400)
   {
     message += "Average,"
   }
