@@ -34,11 +34,9 @@ void TTLog::begin(uint8_t sd_cs_pin)
   @param printSerial - (Bool) Whether the entry should be written to the serial monitor
   @param printSDCard - (Bool) Whether the entry should be written to the SD card
 */
-void TTLog::entryCSV(const char *message, String &filename,
-                     bool print_serial = true, bool print_sd_card = true)
+void TTLog::entryCSV(String &message_str, String &filename,
+                     bool print_serial, bool print_sd_card)
 {
-  String message_str = String(message);
-  message_str += ",";
 
   appendDateTimeCSV(message_str);
 
@@ -73,6 +71,13 @@ void TTLog::entryCSV(const char *message, String &filename,
   }
 }
 
+void entryCSV(const char *message, String &filename,
+                  bool print_serial, bool print_sd_card)
+{
+  String message_str = String(message);
+  entryCSV(message_str, filename, print_serial, print_sd_card);
+}
+
 /*
   @Description
     Creates a log entry that is optionally written to the serial monitor or to
@@ -83,13 +88,12 @@ void TTLog::entryCSV(const char *message, String &filename,
   @param printSerial - (Bool) Whether the entry should be written to the serial monitor
   @param printSDCard - (Bool) Whether the entry should be written to the SD card
 */
-void TTLog::entryTXT(const char *message, String &filename,
-                  bool print_serial, bool print_sd_card)
+void TTLog::entryTXT(String &message_str, String &filename,
+                     bool print_serial, bool print_sd_card)
 {
-  String message_str = String(message);
   message_str += "\n";
 
-  TTLog::appendDateTime(message_str);
+  appendDateTimeTXT(message_str);
 
   if(print_sd_card)
   {
@@ -119,6 +123,13 @@ void TTLog::entryTXT(const char *message, String &filename,
   {
     Serial.println(message_str);
   }
+}
+
+void TTLog::entryTXT(const char *message, String &filename,
+                     bool print_serial, bool print_sd_card)
+{
+  String message_str = String(message);
+  entryTXT(message_str, filename, print_serial, print_sd_card);
 }
 
 void TTLog::setDateTime(int hour, int minute,
@@ -237,7 +248,7 @@ void TTLog::setDateTime(int hour, int minute,
   setTime(hour, minute, second, day, month, year);
 
   String sNow;
-  appendDateTime(sNow);
+  appendDateTimeTXT(sNow);
   Serial.println("It is now: ");
   Serial.println(sNow);
 }

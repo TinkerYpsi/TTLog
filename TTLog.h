@@ -43,11 +43,17 @@ class TTLog
     void entryTXT(const char *message, String &filename,
                       bool print_serial = true, bool print_sd_card = true);
 
+    void entryTXT(String &message, String &filename,
+                      bool print_serial = true, bool print_sd_card = true);
+
     /*
      * prints message to filename on SD card and serial by default
      * formatted for .csv files
      */
     void entryCSV(const char *message, String &filename,
+                      bool print_serial = true, bool print_sd_card = true);
+
+    void entryCSV(String &message, String &filename,
                       bool print_serial = true, bool print_sd_card = true);
 
     /* concatenates string with current time and/or date for .txt files */
