@@ -121,7 +121,7 @@ void TTLog::entryTXT(const char *message, String &filename,
   }
 }
 
-void TTLog::setDateTimeTXT(int hour, int minute,
+void TTLog::setDateTime(int hour, int minute,
                         int day, int month, int year)
 {
   // user entered time as params

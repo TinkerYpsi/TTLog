@@ -33,7 +33,7 @@ class TTLog
 
     /* by default, user sets time using Serial.read()
        but user can also enter time manually as params */
-    void setDateTimeTXT(int hour = -1, int minute = -1, int day = -1,
+    void setDateTime(int hour = -1, int minute = -1, int day = -1,
                             int month = -1, int year = -1);
 
     /*
