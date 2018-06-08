@@ -34,47 +34,18 @@ void TTLog::begin(uint8_t sd_cs_pin)
   @param printSerial - (Bool) Whether the entry should be written to the serial monitor
   @param printSDCard - (Bool) Whether the entry should be written to the SD card
 */
-void TTLog::entryCSV(String &message_str, String &filename,
+void TTLog::entryCSV_str(String &message_str, String &filename,
                      bool print_serial, bool print_sd_card)
 {
-
   appendDateTimeCSV(message_str);
-
-  if(print_sd_card)
-  {
-    // open the file. note that only one file can be open at a time,
-    // so you have to close this one before opening another.
-    File DataFile = SD.open(filename, FILE_WRITE);
-
-    // if the file is available, write to it if...
-    if (DataFile)
-    {
-      // an intruder has entered or left...
-      if(message_str != NO_DATA && message_str != "")
-      {
-        DataFile.println(message_str);
-      }
-      // otherwise just close the file
-      DataFile.close();
-    }
-
-    // if the file isn't open, pop up an error:
-    else
-    {
-      Serial.println("error opening " + String(filename));
-    }
-  }
-  if(print_serial)
-  {
-    Serial.println(message_str);
-  }
+  print(message_str, filename, print_serial, print_sd_card);
 }
 
 void entryCSV(const char *message, String &filename,
                   bool print_serial, bool print_sd_card)
 {
   String message_str = String(message);
-  entryCSV(message_str, filename, print_serial, print_sd_card);
+  entryCSV_str(message_str, filename, print_serial, print_sd_card);
 }
 
 /*
@@ -91,37 +62,8 @@ void TTLog::entryTXT(String &message_str, String &filename,
                      bool print_serial, bool print_sd_card)
 {
   message_str += "\n";
-
   appendDateTimeTXT(message_str);
-
-  if(print_sd_card)
-  {
-    // open the file. note that only one file can be open at a time,
-    // so you have to close this one before opening another.
-    File DataFile = SD.open(filename, FILE_WRITE);
-
-    // if the file is available, write to it if...
-    if (DataFile)
-    {
-      // an intruder has entered or left...
-      if(message_str != NO_DATA && message_str != "")
-      {
-        DataFile.println(message_str);
-      }
-      // otherwise just close the file
-      DataFile.close();
-    }
-
-    // if the file isn't open, pop up an error:
-    else
-    {
-      Serial.println("error opening " + String(filename));
-    }
-  }
-  if(print_serial)
-  {
-    Serial.println(message_str);
-  }
+  print(message_str, filename, print_serial, print_sd_card);
 }
 
 void TTLog::entryTXT(const char *message, String &filename,
@@ -134,6 +76,12 @@ void TTLog::entryTXT(const char *message, String &filename,
 void TTLog::entryHeaderCSV(String &header, String &filename,
                            bool print_serial, bool print_sd_card)
 {
+  print(header, filename, print_serial, print_sd_card);
+}
+
+void print(String &message, String &filename,
+           bool print_serial, bool print_sd_card)
+{
   if(print_sd_card)
   {
     // open the file. note that only one file can be open at a time,
@@ -144,9 +92,9 @@ void TTLog::entryHeaderCSV(String &header, String &filename,
     if (DataFile)
     {
       // an intruder has entered or left...
-      if(message_str != NO_DATA && message_str != "")
+      if(message != NO_DATA && message != "")
       {
-        DataFile.println(header);
+        DataFile.println(message);
       }
       // otherwise just close the file
       DataFile.close();
@@ -160,7 +108,7 @@ void TTLog::entryHeaderCSV(String &header, String &filename,
   }
   if(print_serial)
   {
-    Serial.println(message_str);
+    Serial.println(message);
   }
 }
 
@@ -288,8 +236,8 @@ void TTLog::setDateTime(int hour, int minute,
 
 void TTLog::appendDateTimeTXT(String &sDateTime)
 {
-  appendTime(sDateTime);
-  appendDate(sDateTime);
+  appendTimeTXT(sDateTime);
+  appendDateTXT(sDateTime);
 }
 
 void TTLog::appendTimeTXT(String &time_str)

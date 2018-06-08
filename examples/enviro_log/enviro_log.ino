@@ -1,4 +1,5 @@
 #include <TTLog.h>
+#include <cactus_io_AM2302.h>
 
 const int soilMoisturePin = A1;
 const int luxDetectorPin = A2;
@@ -17,7 +18,7 @@ void setup()
   Serial.begin(9600);
   while(!Serial);
   Log.begin();
-  Log.setDateTimeCSV();
+  Log.setDateTime();
   String header = "Humidity,Temperature,Light,Moisture";
   Log.entryHeaderCSV(header, filename);
 }
@@ -33,8 +34,10 @@ void loop()
     return;
   }
 
-  message += humidityDetector.humidity + ",";
-  message += humidityDetector.temperature_F + ",";
+  message += humidityDetector.humidity;
+  message += ",";
+  message += humidityDetector.temperature_F;
+  message += ",";
 
   lux = analogRead(luxDetectorPin);
   moisture = analogRead(soilMoisturePin);
@@ -54,16 +57,16 @@ void loop()
   // TODO: check if removing commas won't change anything
   if(moisture > 700)
   {
-    message += "Damp,"
+    message += "Damp,";
   }
   else if(moisture > 400)
   {
-    message += "Average,"
+    message += "Average,";
   }
   else
   {
-    message += "Dry,"
+    message += "Dry,";
   }
 
-  Log.entryCSV(message, filename);
+  Log.entryCSV_str(message, filename);
 }

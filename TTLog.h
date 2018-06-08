@@ -53,7 +53,7 @@ class TTLog
     void entryCSV(const char *message, String &filename,
                   bool print_serial = true, bool print_sd_card = true);
 
-    void entryCSV(String &message, String &filename,
+    void entryCSV_str(String &message, String &filename,
                   bool print_serial = true, bool print_sd_card = true);
 
     void entryHeaderCSV(String &header, String &filename,
@@ -70,6 +70,8 @@ class TTLog
     void begin(uint8_t sd_cs_pin = DEFAULT_CS_PIN);
 
   private:
+    void print(String &message, String &filename,
+               bool print_serial, bool print_sd_card);
 };
 
 extern TTLog Log;
