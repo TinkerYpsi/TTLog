@@ -68,5 +68,5 @@ void loop()
     message += "Dry,";
   }
 
-  Log.entryCSV_str(message, filename);
+  Log.entryCSV(message, filename);
 }

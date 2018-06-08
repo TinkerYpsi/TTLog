@@ -34,18 +34,18 @@ void TTLog::begin(uint8_t sd_cs_pin)
   @param printSerial - (Bool) Whether the entry should be written to the serial monitor
   @param printSDCard - (Bool) Whether the entry should be written to the SD card
 */
-void TTLog::entryCSV_str(String &message_str, String &filename,
+void TTLog::entryCSV(String &message_str, String &filename,
                      bool print_serial, bool print_sd_card)
 {
   appendDateTimeCSV(message_str);
   print(message_str, filename, print_serial, print_sd_card);
 }
 
-void entryCSV(const char *message, String &filename,
+void TTLog::entryCSV(const char *message, String &filename,
                   bool print_serial, bool print_sd_card)
 {
   String message_str = String(message);
-  entryCSV_str(message_str, filename, print_serial, print_sd_card);
+  entryCSV(message_str, filename, print_serial, print_sd_card);
 }
 
 /*
@@ -79,7 +79,7 @@ void TTLog::entryHeaderCSV(String &header, String &filename,
   print(header, filename, print_serial, print_sd_card);
 }
 
-void print(String &message, String &filename,
+void TTLog::print(String &message, String &filename,
            bool print_serial, bool print_sd_card)
 {
   if(print_sd_card)
