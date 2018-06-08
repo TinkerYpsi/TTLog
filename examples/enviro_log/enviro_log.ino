@@ -51,7 +51,7 @@ void loop()
   {
     message += "Low light,";
   }
-
+  // TODO: check if removing commas won't change anything
   if(moisture > 700)
   {
     message += "Damp,"
