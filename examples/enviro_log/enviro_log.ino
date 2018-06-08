@@ -19,6 +19,7 @@ void setup()
   while(!Serial);
   Log.begin();
   Log.setDateTime();
+  // TODO: only add once b/c we're appending to existing file
   String header = "Humidity,Temperature,Light,Moisture";
   Log.entryHeaderCSV(header, filename);
 }
@@ -44,15 +45,15 @@ void loop()
 
   if(lux > 700)
   {
-    message += "Bright light,";
+    message += "Bright,";
   }
   else if(lux > 400)
   {
-    message += "Medium light,";
+    message += "Medium,";
   }
   else
   {
-    message += "Low light,";
+    message += "Low,";
   }
   // TODO: check if removing commas won't change anything
   if(moisture > 700)
@@ -69,4 +70,6 @@ void loop()
   }
 
   Log.entryCSV(message, filename);
+  message = "";
+  delay(5000);
 }
