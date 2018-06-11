@@ -1,5 +1,5 @@
-#ifndef TTLog_h
-#define TTLog_h
+#ifndef TT_Log_h
+#define TT_Log_h
 
 #define DEFAULT_CS_PIN  10
 #define NO_DATA   "NO_DATA"
@@ -25,11 +25,11 @@
 ** CLK - pin 13
 */
 
-class TTLog
+class TT_Log
 {
   public:
 
-    TTLog();
+    TT_Log();
 
     /* by default, user sets time using Serial.read()
        but user can also enter time manually as params */
@@ -74,6 +74,6 @@ class TTLog
                bool print_serial, bool print_sd_card);
 };
 
-extern TTLog Log;
+extern TT_Log Log;
 
 #endif

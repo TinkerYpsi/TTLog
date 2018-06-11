@@ -1,14 +1,14 @@
 #include <Arduino.h>
-#include "TTLog.h"
+#include "TT_Log.h"
 
 #include <SPI.h>
 #include <SD.h>
 #include <Time.h>
 #include <TimeLib.h>
 
-TTLog::TTLog() {}
+TT_Log::TT_Log() {}
 
-void TTLog::begin(uint8_t sd_cs_pin)
+void TT_Log::begin(uint8_t sd_cs_pin)
 {
   Serial.print("Initializing SD card...");
 
@@ -34,14 +34,14 @@ void TTLog::begin(uint8_t sd_cs_pin)
   @param printSerial - (Bool) Whether the entry should be written to the serial monitor
   @param printSDCard - (Bool) Whether the entry should be written to the SD card
 */
-void TTLog::entryCSV(String &message_str, String &filename,
+void TT_Log::entryCSV(String &message_str, String &filename,
                      bool print_serial, bool print_sd_card)
 {
   appendDateTimeCSV(message_str);
   print(message_str, filename, print_serial, print_sd_card);
 }
 
-void TTLog::entryCSV(const char *message, String &filename,
+void TT_Log::entryCSV(const char *message, String &filename,
                   bool print_serial, bool print_sd_card)
 {
   String message_str = String(message);
@@ -58,7 +58,7 @@ void TTLog::entryCSV(const char *message, String &filename,
   @param printSerial - (Bool) Whether the entry should be written to the serial monitor
   @param printSDCard - (Bool) Whether the entry should be written to the SD card
 */
-void TTLog::entryTXT(String &message_str, String &filename,
+void TT_Log::entryTXT(String &message_str, String &filename,
                      bool print_serial, bool print_sd_card)
 {
   message_str += "\n";
@@ -66,20 +66,20 @@ void TTLog::entryTXT(String &message_str, String &filename,
   print(message_str, filename, print_serial, print_sd_card);
 }
 
-void TTLog::entryTXT(const char *message, String &filename,
+void TT_Log::entryTXT(const char *message, String &filename,
                      bool print_serial, bool print_sd_card)
 {
   String message_str = String(message);
   entryTXT(message_str, filename, print_serial, print_sd_card);
 }
 
-void TTLog::entryHeaderCSV(String &header, String &filename,
+void TT_Log::entryHeaderCSV(String &header, String &filename,
                            bool print_serial, bool print_sd_card)
 {
   print(header, filename, print_serial, print_sd_card);
 }
 
-void TTLog::print(String &message, String &filename,
+void TT_Log::print(String &message, String &filename,
            bool print_serial, bool print_sd_card)
 {
   if(print_sd_card)
@@ -112,7 +112,7 @@ void TTLog::print(String &message, String &filename,
   }
 }
 
-void TTLog::setDateTime(int hour, int minute,
+void TT_Log::setDateTime(int hour, int minute,
                         int day, int month, int year)
 {
   // user entered time as params
@@ -234,13 +234,13 @@ void TTLog::setDateTime(int hour, int minute,
 }
 
 
-void TTLog::appendDateTimeTXT(String &sDateTime)
+void TT_Log::appendDateTimeTXT(String &sDateTime)
 {
   appendTimeTXT(sDateTime);
   appendDateTXT(sDateTime);
 }
 
-void TTLog::appendTimeTXT(String &time_str)
+void TT_Log::appendTimeTXT(String &time_str)
 {
   String hour_str; String minute_str;
   time_t t = now();
@@ -266,7 +266,7 @@ void TTLog::appendTimeTXT(String &time_str)
   time_str += hour_str + ":" + minute_str + "\n";
 }
 
-void TTLog::appendDateTXT(String &date_str)
+void TT_Log::appendDateTXT(String &date_str)
 {
   time_t t = now();
   String month_str = String(monthShortStr(month()));
@@ -275,13 +275,13 @@ void TTLog::appendDateTXT(String &date_str)
   date_str += String(year(t)) + "\n";
 }
 
-void TTLog::appendDateTimeCSV(String &sDateTime)
+void TT_Log::appendDateTimeCSV(String &sDateTime)
 {
   appendTimeCSV(sDateTime);
   appendDateCSV(sDateTime);
 }
 
-void TTLog::appendDateCSV(String &date_str)
+void TT_Log::appendDateCSV(String &date_str)
 {
   time_t t = now();
   String month_str = String(monthShortStr(month()));
@@ -290,7 +290,7 @@ void TTLog::appendDateCSV(String &date_str)
   date_str += String(year(t));
 }
 
-void TTLog::appendTimeCSV(String &time_str)
+void TT_Log::appendTimeCSV(String &time_str)
 {
   String hour_str; String minute_str;
   time_t t = now();
