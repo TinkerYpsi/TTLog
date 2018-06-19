@@ -7,6 +7,8 @@ int gc1PinVal = 0;
 int gc2PinVal = 0;
 int lux = 0;
 
+int detectLux(int gc1Pin, int gc2Pin, int luxDetectorPin, bool debug = false);
+
 void setup()
 {
   Serial.begin(9600);

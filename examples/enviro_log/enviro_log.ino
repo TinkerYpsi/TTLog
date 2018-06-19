@@ -12,6 +12,8 @@ int lux = 0;
 int moisture = 0;
 String message;
 
+int detectLux(int gc1Pin, int gc2Pin, int luxDetectorPin, bool debug = false);
+
 // filename destination for logged data
 String filename = "data.csv";
 
