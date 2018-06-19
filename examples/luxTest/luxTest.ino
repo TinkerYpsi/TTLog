@@ -18,11 +18,6 @@ void setup()
   // set lux detector for low gain mode
   digitalWrite(gc1Pin, HIGH);
   digitalWrite(gc2Pin, HIGH);
-
-  Log.begin();
-  Log.setDateTime();
-  String header = "Humidity,Temperature,Light,Moisture";
-  Log.entryHeaderCSV(header, filename);
 }
 
 void loop()
