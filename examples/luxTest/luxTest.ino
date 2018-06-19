@@ -24,5 +24,5 @@ void loop()
 {
   lux = analogRead(luxDetectorPin);
   lux *= 100;
-  message += String(lux);
+  Serial.println(lux);
 }
