@@ -263,7 +263,8 @@ void TT_Log::appendTimeTXT(String &time_str)
     minute_str = String(minute(t));
   }
 
-  time_str += hour_str + ":" + minute_str + "\n";
+  //TODO: ADD + "\n" TO time_str (removed for enviro_log)
+  time_str += hour_str + ":" + minute_str + " ";
 }
 
 void TT_Log::appendDateTXT(String &date_str)
